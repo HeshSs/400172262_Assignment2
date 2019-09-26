@@ -10,17 +10,14 @@ public class Main {
 
         HashMap<String, CarModel> carModels = new HashMap<>();
         List<Car> cars = new ArrayList<>();
-        List<Integer> refills = new ArrayList<>();
-        HashMap<Integer, Boolean> tripResults = new HashMap<>();
+
+        List<String> printList = new ArrayList<>();
 
 
         do {
             operation = scanner.next();
 
-            if (operation.equals("FINISH")) {
-                break;
-
-            } else if (operation.equals("MODEL")) {
+            if (operation.equals("MODEL")) {
 
                 String modelName = scanner.next();
                 float fuelEconomy = Float.parseFloat(scanner.next());
@@ -42,9 +39,9 @@ public class Main {
 
                     if (car.getPlateNumber() == plateNumber) {
                         if (car.trip(distance)) {
-                            System.out.println("Trip completed successfully for #" + plateNumber);
+                            printList.add("Trip completed successfully for #" + plateNumber);
                         } else {
-                            System.out.println("Not enough fuel for #" + plateNumber);
+                            printList.add("Not enough fuel for #" + plateNumber);
                         }
                     }
                 }
@@ -60,11 +57,12 @@ public class Main {
 
                 }
 
-            } else {
-                System.out.println("The Code is not working as it's supposed to be");
-            }
-
+            } else break;
         } while (! operation.equals("FINISH"));
+
+        for (String line : printList) {
+            System.out.println(line);
+        }
     }
 }
        /*
