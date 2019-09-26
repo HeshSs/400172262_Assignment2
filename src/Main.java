@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
@@ -15,12 +12,13 @@ public class Main {
         List<Car> cars = new ArrayList<>();
         HashMap<Integer, Float> trips = new HashMap<>();
         List<Integer> refills = new ArrayList<>();
-
+        HashMap<Integer, Boolean> tripResults = new HashMap<>();
 
 
         do {
             operation = scanner.next();
             if (operation.equals("FINISH")) {
+                System.out.println();
                 break;
             } else if (operation.equals("MODEL")) {
 
@@ -40,16 +38,56 @@ public class Main {
                 int plateNumber = Integer.parseInt(scanner.next());
                 int distance = Integer.parseInt(scanner.next());
 
+                for (Car car : cars) {
+
+                    if (car.getPlateNumber() == plateNumber) {
+                        tripResults.put(plateNumber, car.trip(distance));
+                        if (car.trip(distance)) {
+                            System.out.println("Trip completed successfully for #" + plateNumber);
+                        } else {
+                            System.out.println("Not enough fuel for #" + plateNumber);
+                        }
+                    }
+                }
             } else if (operation.equals("REFILL")) {
 
-                int plateNumber = Integer.parseInt(scanner.next());
+                int plateNum = Integer.parseInt(scanner.next());
 
+                for (Car car : cars) {
+
+                    if (car.getPlateNumber() == plateNum) {
+                        car.refill();
+                    }
+
+                }
+
+            } else {
+                System.out.println("The Code is not working as it's supposed to be");
             }
 
-        } while (true);
+        } while (!operation.equals("FINISH"));
 
-
+    }
+}
 /*
+        final int numTrips = tripResults.size();
+
+        Set<Integer> plateNumbers = new HashSet<>();
+        plateNumbers = tripResults.keySet();
+
+        Set<Boolean> results = new HashSet<>();
+        results = (Set<Boolean>) tripResults.values();
+
+        //boolean everybodyStillHasFuel = true;
+        for (int j = 0; j < numTrips; j++) {
+            if () {
+                System.out.println("Trip completed successfully for #" + mapElement.getKey());
+            } else {
+                System.out.println("Not enough fuel for #" + mapElement.getKey());
+                //everybodyStillHasFuel = false;
+            }
+        }
+
         // Creating two different car models
         CarModel model1 = new CarModel("Camry", 6.5, 58);
         CarModel model2 = new CarModel("Civic", 7.5, 52);
@@ -68,18 +106,33 @@ public class Main {
         trips. In particular, they all go on trips of
         length 350kms until one of them runs out of fuel.
          */
-        boolean[] tripResults = new boolean[4];
-        boolean everybodyStillHasFuel = true;
-        while(everybodyStillHasFuel) {
-            for (int j = 0; j < numCars; j++) {
-                tripResults[j] = cars[j].trip(350);
-                if (tripResults[j]) {
-                    System.out.println("Trip completed successfully for #" + cars[j].getPlateNumber());
-                } else {
-                    System.out.println("Not enough fuel for #" + cars[j].getPlateNumber());
-                    everybodyStillHasFuel = false;
-                }
-            }
-        }
-    }
-}
+       /*
+Test Case1
+
+MODEL Camry 6.5 58
+MODEL Civic 7.5 52
+CAR Camry 1111
+CAR Camry 2222
+CAR Civic 3333
+CAR Civic 4444
+TRIP 1111 350
+TRIP 2222 350
+TRIP 3333 350
+TRIP 4444 350
+TRIP 1111 350
+TRIP 2222 350
+TRIP 3333 350
+TRIP 4444 350
+FINISH
+
+----
+
+MODEL X5 10 68
+CAR X5 787878
+TRIP 787878 500
+TRIP 787878 500
+TRIP 787878 10
+REFILL 787878
+TRIP 787878 500
+FINISH
+        */

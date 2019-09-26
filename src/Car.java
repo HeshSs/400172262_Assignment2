@@ -42,6 +42,7 @@ public class Car {
         return plateNumber;
     }
 
+
     double getCurrentGasLevel() {
         return currentGasLevel;
     }
