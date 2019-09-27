@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.function.DoublePredicate;
 
 public class Main {
 
@@ -13,71 +12,91 @@ public class Main {
         List<Car> cars = new ArrayList<>();
 
         List<String> tripPrintList = new ArrayList<>();
-        HashMap<Integer, Integer> successfulTrips = new HashMap<>();
+        List<Integer> successfulTripsPlateNumbers = new ArrayList<>();
+        List<Integer> successfulTripsDistance = new ArrayList<>();
+
 
         HashMap<Integer, Double> distanceTraveled = new HashMap<>();
         ArrayList<String> longTripsPrintList = new ArrayList<>();
 
+        label:
         do {
             operation = scanner.next();
 
-            if (operation.equals("MODEL")) {
+            switch (operation) {
+                case "MODEL":
 
-                String modelName = scanner.next();
-                float fuelEconomy = Float.parseFloat(scanner.next());
-                float gasTankSize = Float.parseFloat(scanner.next());
-                carModels.put(modelName, new CarModel(modelName, fuelEconomy, gasTankSize));
+                    String modelName = scanner.next();
+                    float fuelEconomy = Float.parseFloat(scanner.next());
+                    float gasTankSize = Float.parseFloat(scanner.next());
+                    carModels.put(modelName, new CarModel(modelName, fuelEconomy, gasTankSize));
 
-            } else if (operation.equals("CAR")) {
+                    break;
+                case "CAR": {
 
-                String model = scanner.next();
-                int plateNumber = Integer.parseInt(scanner.next());
-                cars.add(new Car(carModels.get(model), plateNumber));
+                    String model = scanner.next();
+                    int plateNumber = Integer.parseInt(scanner.next());
+                    cars.add(new Car(carModels.get(model), plateNumber));
 
-            } else if (operation.equals("TRIP")) {
+                    break;
+                }
+                case "TRIP": {
 
-                int plateNumber = Integer.parseInt(scanner.next());
-                double distance = Double.parseDouble(scanner.next());
+                    int plateNumber = Integer.parseInt(scanner.next());
+                    double distance = Double.parseDouble(scanner.next());
 
-                for (Car car : cars) {
+                    for (Car car : cars) {
 
-                    if (car.getPlateNumber() == plateNumber) {
-                        distanceTraveled.put(plateNumber, distance);
-                        if (car.trip(distance)) {
-                            successfulTrips.put(plateNumber, (int) distance);
-                            tripPrintList.add("Trip completed successfully for #" + plateNumber);
-                        } else {
-                            tripPrintList.add("Not enough fuel for #" + plateNumber);
+                        if (car.getPlateNumber() == plateNumber) {
+                            distanceTraveled.put(plateNumber, distance);
+                            if (car.trip(distance)) {
+
+                                successfulTripsPlateNumbers.add(plateNumber);
+                                successfulTripsDistance.add((int) distance);
+
+                                tripPrintList.add("Trip completed successfully for #" + plateNumber);
+
+                            } else {
+                                tripPrintList.add("Not enough fuel for #" + plateNumber);
+                            }
                         }
                     }
+                    break;
                 }
-            } else if (operation.equals("LONGTRIPS")) {
+                case "LONGTRIPS": {
 
-                int plateNumber = Integer.parseInt(scanner.next());
-                double longerDistanceThan = Double.parseDouble(scanner.next());
-                int counter = 0;
+                    int plateNumber = Integer.parseInt(scanner.next());
+                    double longerDistanceThan = Double.parseDouble(scanner.next());
+                    int counter = 0;
 
-                for (Integer plateN : successfulTrips.keySet()) {
-                    if (plateN == plateNumber && successfulTrips.get(plateN) >= longerDistanceThan) {
-                        counter ++;
-                    }
-                }
-                longTripsPrintList.add("#" + plateNumber + " made " + counter + " trips longer than " + (int) longerDistanceThan);
+                    for (int i = 0; i < successfulTripsPlateNumbers.size(); i++) {
 
+                        if (successfulTripsPlateNumbers.get(i) == plateNumber && successfulTripsDistance.get(i) >= longerDistanceThan) {
+                            counter++;
+                        }
 
-            } else if (operation.equals("REFILL")) {
-
-                int plateNum = Integer.parseInt(scanner.next());
-
-                for (Car car : cars) {
-
-                    if (car.getPlateNumber() == plateNum) {
-                        car.refill();
                     }
 
-                }
+                    longTripsPrintList.add("#" + plateNumber + " made " + counter + " trips longer than " + (int) longerDistanceThan);
 
-            } else break;
+                    break;
+                }
+                case "REFILL":
+
+                    int plateNum = Integer.parseInt(scanner.next());
+
+                    for (Car car : cars) {
+
+                        if (car.getPlateNumber() == plateNum) {
+                            car.refill();
+                        }
+
+                    }
+
+                    break;
+                default:
+                    break label;
+            }
         } while (! operation.equals("FINISH"));
 
         for (String line : tripPrintList) {
