@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.function.DoublePredicate;
 
 public class Main {
 
@@ -11,8 +12,11 @@ public class Main {
         HashMap<String, CarModel> carModels = new HashMap<>();
         List<Car> cars = new ArrayList<>();
 
-        List<String> printList = new ArrayList<>();
+        List<String> tripPrintList = new ArrayList<>();
+        HashMap<Integer, Integer> successfulTrips = new HashMap<>();
 
+        HashMap<Integer, Double> distanceTraveled = new HashMap<>();
+        ArrayList<String> longTripsPrintList = new ArrayList<>();
 
         do {
             operation = scanner.next();
@@ -38,13 +42,29 @@ public class Main {
                 for (Car car : cars) {
 
                     if (car.getPlateNumber() == plateNumber) {
+                        distanceTraveled.put(plateNumber, distance);
                         if (car.trip(distance)) {
-                            printList.add("Trip completed successfully for #" + plateNumber);
+                            successfulTrips.put(plateNumber, (int) distance);
+                            tripPrintList.add("Trip completed successfully for #" + plateNumber);
                         } else {
-                            printList.add("Not enough fuel for #" + plateNumber);
+                            tripPrintList.add("Not enough fuel for #" + plateNumber);
                         }
                     }
                 }
+            } else if (operation.equals("LONGTRIPS")) {
+
+                int plateNumber = Integer.parseInt(scanner.next());
+                double longerDistanceThan = Double.parseDouble(scanner.next());
+                int counter = 0;
+
+                for (Integer plateN : successfulTrips.keySet()) {
+                    if (plateN == plateNumber && successfulTrips.get(plateN) >= longerDistanceThan) {
+                        counter ++;
+                    }
+                }
+                longTripsPrintList.add("#" + plateNumber + " made " + counter + " trips longer than " + (int) longerDistanceThan);
+
+
             } else if (operation.equals("REFILL")) {
 
                 int plateNum = Integer.parseInt(scanner.next());
@@ -60,7 +80,11 @@ public class Main {
             } else break;
         } while (! operation.equals("FINISH"));
 
-        for (String line : printList) {
+        for (String line : tripPrintList) {
+            System.out.println(line);
+        }
+
+        for (String line : longTripsPrintList) {
             System.out.println(line);
         }
     }
@@ -96,6 +120,20 @@ REFILL 787878
 TRIP 787878 500
 FINISH
 
+----
 
-            currentGasLevel = 0;
+MODEL Camry 6.5 58
+MODEL Civic 7.5 52
+CAR Camry 1111
+CAR Civic 4444
+TRIP 1111 50
+TRIP 4444 50
+TRIP 1111 350
+TRIP 4444 350
+TRIP 1111 350
+TRIP 4444 350
+LONGTRIPS 1111 300
+LONGTRIPS 4444 300
+FINISH
+
         */
