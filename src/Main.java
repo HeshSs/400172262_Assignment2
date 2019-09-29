@@ -5,18 +5,15 @@ public class Main {
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
-
         String operation;
 
         HashMap<String, CarModel> carModels = new HashMap<>();
         List<Car> cars = new ArrayList<>();
 
-        List<String> tripPrintList = new ArrayList<>();
         List<Integer> successfulTripsPlateNumbers = new ArrayList<>();
         List<Integer> successfulTripsDistance = new ArrayList<>();
 
-
-        HashMap<Integer, Double> distanceTraveled = new HashMap<>();
+        List<String> tripPrintList = new ArrayList<>();
         ArrayList<String> longTripsPrintList = new ArrayList<>();
 
         label:
@@ -48,16 +45,16 @@ public class Main {
                     for (Car car : cars) {
 
                         if (car.getPlateNumber() == plateNumber) {
-                            distanceTraveled.put(plateNumber, distance);
                             if (car.trip(distance)) {
 
                                 successfulTripsPlateNumbers.add(plateNumber);
                                 successfulTripsDistance.add((int) distance);
 
                                 tripPrintList.add("Trip completed successfully for #" + plateNumber);
-
+                                System.out.println("Trip completed successfully for #" + plateNumber);
                             } else {
                                 tripPrintList.add("Not enough fuel for #" + plateNumber);
+                                System.out.println("Not enough fuel for #" + plateNumber);
                             }
                         }
                     }
@@ -70,14 +67,13 @@ public class Main {
                     int counter = 0;
 
                     for (int i = 0; i < successfulTripsPlateNumbers.size(); i++) {
-
-                        if (successfulTripsPlateNumbers.get(i) == plateNumber && successfulTripsDistance.get(i) >= longerDistanceThan) {
+                        if (successfulTripsPlateNumbers.get(i) == plateNumber && successfulTripsDistance.get(i) > longerDistanceThan) {
                             counter++;
                         }
-
                     }
 
                     longTripsPrintList.add("#" + plateNumber + " made " + counter + " trips longer than " + (int) longerDistanceThan);
+                    System.out.println("#" + plateNumber + " made " + counter + " trips longer than " + (int) longerDistanceThan);
 
                     break;
                 }
@@ -86,19 +82,18 @@ public class Main {
                     int plateNum = Integer.parseInt(scanner.next());
 
                     for (Car car : cars) {
-
                         if (car.getPlateNumber() == plateNum) {
                             car.refill();
                         }
-
                     }
 
                     break;
                 default:
                     break label;
             }
-        } while (! operation.equals("FINISH"));
+        } while (!operation.equals("FINISH"));
 
+        /*
         for (String line : tripPrintList) {
             System.out.println(line);
         }
@@ -106,53 +101,7 @@ public class Main {
         for (String line : longTripsPrintList) {
             System.out.println(line);
         }
+
+         */
     }
 }
-       /*
-Test Case1
-
-MODEL Camry 6.5 58
-MODEL Civic 7.5 52
-CAR Camry 1111
-CAR Camry 2222
-CAR Civic 3333
-CAR Civic 4444
-TRIP 1111 350
-TRIP 2222 350
-TRIP 3333 350
-TRIP 4444 350
-TRIP 1111 350
-TRIP 2222 350
-TRIP 3333 350
-TRIP 4444 350
-FINISH
-
-----
-Test case2
-
-MODEL X5 10 68
-CAR X5 787878
-TRIP 787878 500
-TRIP 787878 500
-TRIP 787878 10
-REFILL 787878
-TRIP 787878 500
-FINISH
-
-----
-
-MODEL Camry 6.5 58
-MODEL Civic 7.5 52
-CAR Camry 1111
-CAR Civic 4444
-TRIP 1111 50
-TRIP 4444 50
-TRIP 1111 350
-TRIP 4444 350
-TRIP 1111 350
-TRIP 4444 350
-LONGTRIPS 1111 300
-LONGTRIPS 4444 300
-FINISH
-
-        */
